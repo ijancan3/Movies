@@ -8,7 +8,7 @@ void MovieDriver::parseMovies() {
 	std::ifstream movieFile;  //Starts an ifstream object to read a text file
 	movieFile.open("movies.txt");
 
-	string movie; //create a string to parse a while line which contains all the movie fields
+	string movie; 
 	vector<string> movieFileParse; //creates a vector to place all of the movies as comma delimited strings
 	while (getline(movieFile, movie)) { //reads the movie file, puts each line into the string "movie"
 		movieFileParse.push_back(movie); //adds each movie string to the vector
@@ -22,8 +22,8 @@ void MovieDriver::parseMovies() {
 		for (string movies : movieFileParse) { //if the vector movieFileParse has movies in it
 			istringstream ss(movies); //create a stringstream object to parse each movie member of movieFileParse vector
 			string parsedString; //this is where the comma delimited strings will be temporarily stored
-			vector<string> movieObject; //final movie object will be created from this vector
-			while (getline(ss, parsedString, '*')) { //checks each line in ss(which contains the movies member of movieFileParse), until it gets to a comma, and places it into parsedString
+			vector<string> movieObject; //final movie object will be stored in this vector
+			while (getline(ss, parsedString, '*')) { //checks each line in ss(which contains the movies member of movieFileParse), until it gets to a *, and places it into parsedString
 
 				movieObject.push_back(parsedString);
 			}
@@ -60,6 +60,8 @@ Genre MovieDriver::convertGenre(string parsedGenre) {
 		return Drama;
 	if (parsedGenre.compare("Documentary") == 0)
 		return Documentary;
+	if (parsedGenre.compare("Animation") == 0)
+		return Animation;
 	if(parsedGenre.compare("UNKNOWN")==0)
 		return UNKNOWN;
 }		
@@ -82,7 +84,7 @@ void MovieDriver::runStartLoop() {
 		cout << "\nWelcome to the movie database!\nPlease select from the following options:\n";
 		cout << "1) Print Movie List\n2) Add a movie\n3) Remove a movie\n4) Save changes\n5) Keyword Search\n6) Edit Movie\n7) Quit\nPlease enter your choice: ";
 		
-		cin >> userInput;
+		userInput = readInput();
 		switch (userInput) {
 		case 1:
 			printMovies();
@@ -135,7 +137,8 @@ void MovieDriver::removeMovie() {
 
 }
 void MovieDriver::addNewMovie() {
-	
+	int rating{ 0 };
+	int timesWatched{ 0 };
 	Genre genre1;
 	Genre genre2;
 	genre1 = this->genreSwitch();
@@ -150,58 +153,99 @@ void MovieDriver::addNewMovie() {
 	}
 	cin.clear();
 	cin.ignore(1000, '\n');
-	string userFields[]{ "title: ", "summary: ", "commentary: ", "rating: ", "number of times viewed: " };
+	string userFields[]{ "title: ", "summary: ", "commentary: ", "rating ", "number of times viewed: " };
 	vector<string> movieFields;
 	for (int i{ 0 }; i < 5; ++i) {
 		string input;
 		cout << "Please enter the " << userFields[i];
 		//cin.clear();
 		//cin.ignore(1000, '/n');
-		getline(cin, input);
-		movieFields.push_back(input);
-		cout << endl;
-		
+		if (userFields[i].compare("rating ") == 0) {
+			cout << "between 1 and 5. " << endl;
+			
+			bool stop = false;
+			while (!stop) {
+				rating = readInput();
+				if (rating < 1 || rating > 5) {
+					cout << "Please enter a valid rating between 1 and 5." << endl;
+				}
+				else {
+					stop = true;
+					break;
+				}
+			}
+			cout << endl;
+		}
+		else if (userFields[i].compare("number of times viewed: ")==0) {
+			timesWatched = readInput();
+				cout << endl;
+		}
+		else {
+			getline(cin, input);
+				movieFields.push_back(input);
+				cout << endl;
+		}
 	}
+	
+
 	string ID = generateID();
-	int rating = std::stoi(movieFields.at(3));
-	int timesWatched = std::stoi(movieFields.at(4));
+	
 	addMovie(ID, movieFields.at(0), genre1, genre2, movieFields.at(1), movieFields.at(2), rating, timesWatched);
 
 }
-
+int MovieDriver::readInput() { //Reads input to make sure an integer was entered
+	int input;
+	bool valid = false;
+	do {
+		cout << "Please enter your choice: " << std::flush;
+		cin >> input;
+		if (cin.good()) {
+			valid = true;
+		}
+		else {
+			cin.clear();
+			cin.ignore(1000, '\n');
+			cout << "Invalid input; please re-enter.\n";
+		}
+	} while (!valid);
+	return input;
+}
 Genre MovieDriver::genreSwitch() {
 	int userInput;
 	Genre genre1;
-	cout << "What is the genre of the movie?\n1) Fantasy\n2) Horror\n3) Comedy\n4) Drama \n5) SciFi\n6) Action\n7) Adventure\n8) Documentary\n9) Unknown\nEnter a number: ";
-	cin >> userInput;
+	cout << "What is the genre of the movie?\n1) Action\n2) Adventure\n3) Animation\n4) Comedy \n5) Documentary\n6) Drama\n7) Fantasy\n8) Horror\n9) SciFi\n10) Unknown\nEnter a number: ";
+	userInput = readInput();
+	
 	switch (userInput) {
 	case 1:
-		genre1 = Fantasy;
-		break;
-	case 2:
-		genre1 = Horror;
-		break;
-	case 3:
-		genre1 = Comedy;
-		break;
-	case 4:
-		genre1 = Drama;
-		break;
-	case 5:
-		genre1 = SciFi;
-		break;
-	case 6:
 		genre1 = Action;
 		break;
-	case 7:
+	case 2:
 		genre1 = Adventure;
 		break;
-	case 8:
+	case 3:
+		genre1 = Animation;
+		break;
+	case 4:
+		genre1 = Comedy;
+		break;
+	case 5:
 		genre1 = Documentary;
 		break;
-	case 9:
-		genre1 = UNKNOWN;
+	case 6:
+		genre1 = Drama;
 		break;
+	case 7:
+		genre1 = Fantasy;
+		break;
+	case 8:
+		genre1 = Horror;
+		break;
+	case 9:
+		genre1 = SciFi;
+		break;
+	case 10:
+		genre1 = UNKNOWN;
 	default:
 		break;
 
@@ -299,66 +343,69 @@ void MovieDriver::editMovie() {
 	bool found = false;
 	cin.clear();
 	cin.ignore(1000, '\n');
-	
 	getline(cin, id);
-	for (Movie mov : this->movies) {
-		if (mov.getID().compare(id) == 0) {
-			cout << "Which field do you want to edit:\n1) Title\n 2) Summary\n3) Commentary\n4) Rating\n5) Times Watched\n6) Genre\n7) Return to Menu" << endl;
+	for (int i{ 0 }; i < this->movies.size(); ++i) {
+		if (this->movies[i].getID().compare(id) == 0) {
+			cout << "Which field do you want to edit:\n1) Title\n2) Summary\n3) Commentary\n4) Rating\n5) Times Watched\n6) Genre\n7) Return to Menu" << endl;
 			cout << "Enter your choice: ";
 			Genre genre;
 			int choice;
 			string newValue;
 			int newNumber;
 
-			cin >> choice;
+			choice = readInput();
 			switch (choice) {
 			case 1:
-				cout << mov.getTitle() << endl;
+				cout << this->movies[i].getTitle() << endl;
 				cout << "\nEnter the new title: ";
 				cin.clear();
 				cin.ignore(1000, '\n');
 				getline(cin, newValue);
-				mov.setTitle(newValue);
-				cout << mov.getTitle();
+				this->movies[i].setTitle(newValue);
+				cout << this->movies[i].getTitle();
 				break;
 			case 2:
 				cout << "\nEnter the new summary: " << endl;
 				cin.clear();
 				cin.ignore(1000, '\n');
 				getline(cin, newValue);
-				mov.setSummary(newValue);
+				this->movies[i].setSummary(newValue);
 				break;
 			case 3:
 				cout << "\nEnter the new commentary: " << endl;
 				cin.clear();
 				cin.ignore(1000, '\n');
 				getline(cin, newValue);
-				mov.setCommentary(newValue);
+				this->movies[i].setCommentary(newValue);
 				break;
 			case 4:
 				cout << "\nEnter the new rating: ";
 				cin.clear();
 				cin.ignore(1000, '\n');
-				cin >> newNumber;
-				mov.setRating(newNumber);
+				newNumber = readInput();
+				this->movies[i].setRating(newNumber);
 				break;
 			case 5:
 				cout << "\nEnter the new times watched: ";
 				cin.clear();
 				cin.ignore(1000, '\n');
-				cin >> newNumber;
-				mov.setTimesWatched(newNumber);
+				newNumber = readInput();
+				this->movies[i].setTimesWatched(newNumber);
 				break;
 			case 6:
 				genre = genreSwitch();
-				mov.setGenre1(genre);
+				this->movies[i].setGenre1(genre);
 				cout << "Is there a second genre? Y/N " << endl;
 				cin.clear();
 				cin.ignore(1000, '\n');
 				getline(cin, newValue);
 				if (newValue == "Y" || newValue == "y") {
 					genre = genreSwitch();
-					mov.setGenre2(genre);
+					this->movies[i].setGenre2(genre);
+				}
+				else {
+					genre = UNKNOWN;
+					this->movies[i].setGenre2(genre);
 				}
 				break;
 			default:

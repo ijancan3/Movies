@@ -1,5 +1,5 @@
 #pragma once
 #include <string>
 using std::string;
-enum Genre { Fantasy, Horror, Comedy, Drama, SciFi, Action, Adventure,Documentary, UNKNOWN };
-static string genre[]{ "Fantasy", "Horror", "Comedy", "Drama","SciFi", "Action", "Adventure","Documentary", "UNKNOWN" };
+enum Genre { Action, Adventure, Animation, Comedy, Documentary, Drama, Fantasy, Horror, SciFi, UNKNOWN };
+static string genre[]{ "Action", "Adventure","Animation", "Comedy", "Documentary", "Drama", "Fantasy", "Horror", "SciFi", "UNKNOWN" };
