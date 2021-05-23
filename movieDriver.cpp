@@ -422,6 +422,3 @@ void MovieDriver::editMovie() {
 	}
 	
 }
-void MovieDriver::setFields(Movie& mov) {
-	
-}

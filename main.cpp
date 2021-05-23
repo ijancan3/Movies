@@ -9,25 +9,7 @@ int main()
     MovieDriver newMovie;
     newMovie.parseMovies();
     newMovie.runStartLoop();
-    /*newMovie.parseMovies();
-    cout << "\n\n";
-    newMovie.printMovies();*/
-    /*std::fstream myfile;
-    myfile.open("movies.txt", std::ios::in|std::ios::out|std::ios::app);
-    if (myfile.is_open()) {
-        std::cout << "Opening..";
-    }
-    myfile << "First line\n";
-    myfile << "Second line";
-    myfile.close();
-    std::string first;
-    std::string second;
-    myfile.open("movies.txt", std::ios::in | std::ios::out | std::ios::app);
-    getline(myfile, first);
-    getline(myfile, second);
-
-    std::cout << first<<std::endl;
-    std::cout << second;*/
+   
 
 
 }

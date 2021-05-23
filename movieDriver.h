@@ -17,6 +17,6 @@ public:
 	void removeMovie();
 	void keywordSearch();
 	void editMovie();
-	void setFields(Movie&);
+	
 	int readInput();
 };
