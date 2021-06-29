@@ -5,7 +5,7 @@ Things I have learned while creating this program:
 
   1) Modular design: The main() method is relatively free of clutter, only being used to create the needed object and use the methods to parse and run the primary loop.
 
-  2) Manipulating a .txt file to read and write to it. This is done using an ifstream class. The movies are stored in the text file using a '*' delimited string, and the file is read line by line. Then, the '*' delimited values are separated into individual string objects, which are then converted to their proper types (if needed for the int variables, such as rating), and the add() method is called that creates the movie objects using the Movie constructor. These objects are stored in a vector for the duration of runtime. The setMovieFile() method also writes all changes to the text file by truncating the file and then writing the objects from the working memory as a '*' delimited string.
+  2) Manipulating a .txt file to read and write to it. This is done using an ifstream class. The movies are stored in the text file using a '\*' delimited string, and the file is read line by line. Then, the '\*' delimited values are separated into individual string objects, which are then converted to their proper types (if needed for the int variables, such as rating), and the add() method is called that creates the movie objects using the Movie constructor. These objects are stored in a vector for the duration of runtime. The setMovieFile() method also writes all changes to the text file by truncating the file and then writing the objects from the working memory as a '*' delimited string.
   
   3) How to create an enumerated type (Genre) and use it to store the genre values. 
   
